@@ -189,9 +189,14 @@ define jenkins::plugin(
       checksum_type   => $checksum_type,
       proxy_server    => $::jenkins::proxy::url,
       cleanup         => false,
-      extract         => false,
       require         => $plugindir,
       notify          => $notify,
+      extract => true,
+      extract_path => $jenkins::plugin_dir,
+      extract_command => "unzip %s -d ${::jenkins::plugin_dir}/${title}",
+      creates => "${::jenkins::plugin_dir}/${title}",
+      user => $::jenkins::user,
+      group => $::jenkins::group,
     }
     $archive_require = Archive[$plugin]
   } else {
